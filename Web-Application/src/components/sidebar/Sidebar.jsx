@@ -16,17 +16,17 @@ const sidebarItems = [
     icon: LayoutDashboard
   },
   {
-    name: 'EV Owner Management',
+    name: 'EV Owners',
     path: '/ev-owner-management',
     icon: Users
   },
   {
-    name: 'Charging Station Management',
+    name: 'Charging Stations',
     path: '/charging-station-management',
     icon: Zap
   },
   {
-    name: 'Booking Management',
+    name: 'Bookings',
     path: '/booking-management',
     icon: Calendar
   }
