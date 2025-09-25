@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-gray-50;
+  }
+}
+
+@layer components {
+  .btn-gradient {
+    @apply bg-gradient-to-br from-primary-500 to-success-500;
+  }
+  
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary-500 to-success-500;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-br from-primary-500 to-success-500 bg-clip-text text-transparent;
+  }
+}
