@@ -12,6 +12,18 @@ using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+
 // Add services to DI
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -22,6 +34,7 @@ builder.Services.AddSingleton<IMongoRepository<EVOwner>, MongoRepository<EVOwner
 //builder.Services.AddSingleton<IMongoRepository<Booking>, MongoRepository<Booking>>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 //builder.Services.AddScoped<IEVOwnerService, EVOwnerService>();
 //builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
 //builder.Services.AddScoped<IBookingService, BookingService>();
@@ -93,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
