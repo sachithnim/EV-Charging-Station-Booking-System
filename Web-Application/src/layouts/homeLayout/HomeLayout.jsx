@@ -1,11 +1,32 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
+import { getMe } from "../../services/me/me";
 
 export default function HomeLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/sign-in");
+    } else {
+      // fetch current user
+      getMe()
+        .then((user) => {
+          setCurrentUser(user);
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+        });
+    }
+  }, [navigate]);
+
+  
 
   // Handle responsive behavior
   useEffect(() => {
@@ -39,17 +60,18 @@ export default function HomeLayout() {
         isOpen={sidebarOpen || !isMobile} 
         onClose={handleSidebarClose}
         isMobile={isMobile}
+        currentUser={currentUser}
       />
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <Header onMenuClick={handleMenuClick} />
+        <Header onMenuClick={handleMenuClick} currentUser={currentUser}/>
         
         {/* Page Content */}
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
           <div className="max-w-7xl mx-auto">
-            <Outlet />
+            <Outlet context={{ currentUser }}/>
           </div>
         </main>
       </div>

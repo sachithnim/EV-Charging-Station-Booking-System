@@ -32,7 +32,13 @@ const sidebarItems = [
   }
 ];
 
-export default function Sidebar({ isOpen, onClose, isMobile }) {
+export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/sign-in";
+  }
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -111,9 +117,14 @@ export default function Sidebar({ isOpen, onClose, isMobile }) {
               A
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-800 truncate">Admin User</p>
-              <p className="text-xs text-gray-500 truncate">admin@chargepoint.com</p>
+              <p className="text-sm font-semibold text-gray-800 truncate">{currentUser?.identifier}</p>
+              <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
             </div>
+          </div>
+          <div className="mt-4">
+            <button className="w-full px-4 py-2 bg-red-400 text-white rounded-xl hover:bg-red-500 transition-colors font-semibold" onClick={logout}>
+              Sign Out
+            </button>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { Menu, Bell, Search, User } from 'lucide-react';
 
-export default function Header({ onMenuClick }) {
+export default function Header({ onMenuClick, currentUser }) {
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6 lg:py-4">
       <div className="flex items-center justify-between">
@@ -43,8 +43,8 @@ export default function Header({ onMenuClick }) {
           {/* User Profile */}
           <div className="flex items-center gap-3 pl-3 border-l border-gray-200">
             <div className="hidden sm:block text-right">
-              <p className="text-sm font-semibold text-gray-800">Admin User</p>
-              <p className="text-xs text-gray-500">Administrator</p>
+              <p className="text-sm font-semibold text-gray-800">{currentUser?.identifier}</p>
+              <p className="text-xs text-gray-500">{currentUser?.role}</p>
             </div>
             <button className="w-10 h-10 bg-gradient-to-br from-primary-500 to-success-500 rounded-full flex items-center justify-center text-white font-semibold hover:shadow-lg transition-all duration-200">
               <User className="w-5 h-5" />

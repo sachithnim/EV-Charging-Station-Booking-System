@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Lock, Zap } from "lucide-react";
 import Input from "./../../components/input/Input";
 import Button from "./../../components/button/Button";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../services/auth/auth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -23,10 +31,8 @@ export default function SignIn() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+    if (!formData.username) {
+      newErrors.username = "Username is required";
     }
 
     if (!formData.password) {
@@ -42,16 +48,22 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!validateForm()) return;
+    if (!validateForm()) return;
 
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    const response = await login(formData);
+
+    if (response.token) {
+      console.log("Login successful:", response);
+      localStorage.setItem("token", response.token);
       navigate("/");
-      console.log("Sign in attempted with:", formData);
-    }, 1000);
+    } else {
+      console.error("Login failed");
+      setLoading(false);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -67,36 +79,38 @@ export default function SignIn() {
             `,
             backgroundSize: "100px 100px",
           }}
-        ></div>
+        />
       </div>
 
       {/* Sign In Card */}
-      <div className="bg-white rounded-3xl shadow-2xl p-12 w-full max-w-md relative overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 lg:p-12 w-full max-w-md relative overflow-hidden">
         {/* Top accent */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-success-500"></div>
 
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white">
-              <Zap className="w-7 h-7" />
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white">
+              <Zap className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-800">ChargePoint</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+              ChargePoint
+            </h1>
           </div>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Power up your journey with smart EV charging
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <Input
-            type="email"
-            label="Email Address"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            error={errors.email}
+            type="text"
+            label="Username"
+            placeholder="Enter your username"
+            value={formData.username}
+            onChange={(e) => handleInputChange("username", e.target.value)}
+            error={errors.username}
             icon={Mail}
             required
           />
@@ -112,7 +126,7 @@ export default function SignIn() {
             required
           />
 
-          <div className="flex items-center justify-center text-sm">
+          <div className="flex items-center justify-center text-xs sm:text-sm">
             <a
               href="#"
               className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
