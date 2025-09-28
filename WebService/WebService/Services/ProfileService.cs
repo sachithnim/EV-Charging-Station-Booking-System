@@ -16,14 +16,16 @@ namespace WebService.Services
             _evOwnerRepo = evOwnerRepo;
         }
 
-        // Fetch profile based on role and identifier
-        public async Task<UserProfile> GetProfileAsync(string identifier, string role)
+       public async Task<UserProfile> GetProfileAsync(string identifier, string role)
         {
-            if (role == "Backoffice" || role == "StationOperator")
+            UserProfile profile;
+
+            if (role == "Backoffice" || role == "StationOperator" || role == "Admin")
             {
                 var user = (await _userRepo.FindAsync(u => u.Username == identifier)).FirstOrDefault();
                 if (user == null) throw new BusinessException("User not found.");
-                return new UserProfile
+
+                profile = new UserProfile
                 {
                     Identifier = user.Username,
                     Role = user.Role,
@@ -34,7 +36,8 @@ namespace WebService.Services
             {
                 var owner = await _evOwnerRepo.GetByIdAsync(identifier);
                 if (owner == null) throw new BusinessException("EV Owner not found.");
-                return new UserProfile
+
+                profile = new UserProfile
                 {
                     Identifier = owner.NIC,
                     Role = "EVOwner",
@@ -44,7 +47,26 @@ namespace WebService.Services
                     IsActive = owner.IsActive
                 };
             }
-            throw new BusinessException("Invalid role.");
+            else
+            {
+                throw new BusinessException("Invalid role.");
+            }
+
+            // Attach functions dynamically based on role
+            profile.Functions = GetFunctionsForRole(profile.Role);
+            return profile;
+        }
+
+        private List<string> GetFunctionsForRole(string role)
+        {
+            return role switch
+            {
+                "Admin" => new List<string> { "Dashboard", "EV Owners", "Charging Stations", "Bookings", "Reports", "Users" },
+                "Backoffice" => new List<string> { "Dashboard", "EV Owners", "Charging Stations", "Bookings" },
+                "StationOperator" => new List<string> { "Dashboard", "Charging Stations","Charging Stations", "Bookings" },
+                "EVOwner" => new List<string> { "My Profile", "My Bookings", "Payments" },
+                _ => new List<string>()
+            };
         }
     }
 }

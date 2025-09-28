@@ -1,8 +1,8 @@
-import axiosInstance from "../axiosInstanceNoToken";
+import axiosInstanceNoToken from "../axiosInstanceNoToken";
 
 const login = async (credentials) => {
   try {
-    const response = await axiosInstance.post("/auth/login", credentials);
+    const response = await axiosInstanceNoToken.post("/auth/login", credentials);
     return response.data;
   } catch (error) {
     console.error("Login failed:", error);

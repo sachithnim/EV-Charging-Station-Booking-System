@@ -6,7 +6,8 @@ import {
   Calendar, 
   Menu,
   X,
-  ChevronLeft
+  ChevronLeft,
+  UserPlus
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -29,6 +30,11 @@ const sidebarItems = [
     name: 'Bookings',
     path: '/booking-management',
     icon: Calendar
+  },
+  {
+    name: 'Users',
+    path: '/user-management',
+    icon: UserPlus
   }
 ];
 
@@ -82,7 +88,7 @@ export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
 
         {/* Navigation Items */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-          {sidebarItems.map((item) => {
+          {sidebarItems.filter(item => currentUser?.functions?.includes(item.name)).map((item) => {
             const Icon = item.icon;
             return (
               <NavLink

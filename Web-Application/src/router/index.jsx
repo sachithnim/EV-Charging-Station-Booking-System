@@ -5,6 +5,7 @@ import EVOwnerManagement from "../layouts/evOwnerManagement/EVOwnerManagement";
 import SignIn from "../layouts/signIn/SignIn";
 import ChargingStationManagement from "../layouts/chargingStationManagement/ChargingStationManagement";
 import BookingManagement from "../layouts/bookingManagement/BookingManagement";
+import UserManagement from "../layouts/userManagement/UserManagement";
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +40,15 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         element: <BookingManagement />
+                    }
+                ]
+            },
+            {
+                path: "user-management",
+                children: [
+                    {
+                        index: true,
+                        element: <UserManagement />
                     }
                 ]
             }

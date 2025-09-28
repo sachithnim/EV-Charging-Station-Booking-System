@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Mail, Lock, Zap } from "lucide-react";
+import { Lock, Zap, User } from "lucide-react";
 import Input from "./../../components/input/Input";
 import Button from "./../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth/auth";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -47,23 +48,26 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setLoading(true);
 
-    const response = await login(formData);
+    try {
+      const response = await login(formData);
 
-    if (response.token) {
-      console.log("Login successful:", response);
-      localStorage.setItem("token", response.token);
-      navigate("/");
-    } else {
-      console.error("Login failed");
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        toast.success("Login successful! 🚀");
+        navigate("/");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+    } catch (error) {
+      const msg = error?.response?.data?.message || "Something went wrong.";
+      toast.error(msg);
+    } finally {
       setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -111,7 +115,7 @@ export default function SignIn() {
             value={formData.username}
             onChange={(e) => handleInputChange("username", e.target.value)}
             error={errors.username}
-            icon={Mail}
+            icon={User}
             required
           />
 
