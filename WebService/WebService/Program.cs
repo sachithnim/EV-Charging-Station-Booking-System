@@ -35,6 +35,7 @@ builder.Services.AddSingleton<IMongoRepository<EVOwner>, MongoRepository<EVOwner
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IUserService, UserService>();
 //builder.Services.AddScoped<IEVOwnerService, EVOwnerService>();
 //builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
 //builder.Services.AddScoped<IBookingService, BookingService>();

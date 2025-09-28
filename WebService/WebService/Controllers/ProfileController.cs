@@ -18,7 +18,6 @@ namespace WebService.Controllers
             _service = service;
         }
 
-        // Get current logged-in user's profile
         [HttpGet]
         public async Task<IActionResult> GetProfile()
         {

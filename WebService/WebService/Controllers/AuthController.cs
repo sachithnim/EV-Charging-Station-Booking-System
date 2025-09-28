@@ -10,8 +10,9 @@ using WebService.Models;
 using WebService.Services.Interfaces;
 using WebService.Models;
 using WebService.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
-namespace EVChargingAPI.Controllers
+namespace WebService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -26,13 +27,13 @@ namespace EVChargingAPI.Controllers
 
         // Register web user (Backoffice only, but no auth yet)
         [HttpPost("register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(User user)
         {
             var id = await _service.RegisterUserAsync(user);
             return CreatedAtAction(nameof(Register), new { id });
         }
 
-        // Login web user
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
