@@ -14,7 +14,8 @@ export default function Button({
   const variantClasses = {
     primary: 'btn-gradient text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5 active:translate-y-0',
     secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-    outline: 'border-2 border-primary-500 text-primary-500 hover:bg-primary-50'
+    outline: 'border-2 border-primary-500 text-primary-500 hover:bg-primary-50',
+    danger: 'bg-red-600 text-white hover:bg-red-700',
   };
   
   const sizeClasses = {

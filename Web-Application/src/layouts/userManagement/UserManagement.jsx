@@ -6,6 +6,7 @@ import UserTable from './UserTable';
 import Modal from '../../components/modal/Modal';
 import UserForm from './UserForm';
 import Button from "../../components/button/Button";
+import toast from 'react-hot-toast';
 
 
 export default function UserManagement() {
@@ -22,6 +23,7 @@ export default function UserManagement() {
   const [selectedRole, setSelectedRole] = useState('All');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
 
@@ -50,14 +52,33 @@ export default function UserManagement() {
     }
   };
 
+  const handleDeleteConfirm = async () => {
+    setFormLoading(true);
+    const result = await handleDeleteUser(selectedUser);
+    setFormLoading(false);
+    
+    if (result.success) {
+      setShowDeleteModal(false);
+      setSelectedUser(null);
+      toast.success('User deleted successfully!');
+    }
+  }
+
   const openEditModal = (user) => {
     setSelectedUser(user);
     setShowEditModal(true);
   };
 
+  const openDeleteModal = (user) => {
+    setSelectedUser(user);
+    console.log(user);
+    setShowDeleteModal(true);
+  }
+
   const closeModals = () => {
     setShowCreateModal(false);
     setShowEditModal(false);
+    setShowDeleteModal(false);
     setSelectedUser(null);
   };
 
@@ -151,7 +172,7 @@ export default function UserManagement() {
       <UserTable
         users={filteredUsers}
         onEdit={openEditModal}
-        onDelete={handleDeleteUser}
+        onDelete={openDeleteModal}
       />
 
       {/* Create User Modal */}
@@ -179,6 +200,31 @@ export default function UserManagement() {
           onCancel={closeModals}
           loading={formLoading}
         />
+      </Modal>
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={closeModals}
+        title="Confirm Delete"
+      >
+        <div className="space-y-6">
+          <p>Are you sure you want to delete this user?</p>
+          <div className="flex justify-end">
+            <Button
+              variant="secondary"
+              onClick={closeModals}
+              className="mr-2"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDeleteConfirm}
+              loading={formLoading}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

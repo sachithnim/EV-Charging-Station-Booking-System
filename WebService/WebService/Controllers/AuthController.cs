@@ -27,7 +27,6 @@ namespace WebService.Controllers
 
         // Register web user (Backoffice only, but no auth yet)
         [HttpPost("register")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(User user)
         {
             var id = await _service.RegisterUserAsync(user);

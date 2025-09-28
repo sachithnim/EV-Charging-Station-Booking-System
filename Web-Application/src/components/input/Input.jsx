@@ -45,7 +45,9 @@ export default function Input({
           onChange={onChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className="flex-1 px-4 py-4 border-none outline-none text-base bg-transparent text-gray-800 placeholder-gray-400"
+          className={`flex-1 px-4 py-4 border-none outline-none text-base bg-transparent text-gray-800 placeholder-gray-400
+            ${type === 'password' ? 'pr-12' : ''}  /* extra padding for eye icon */
+          `}
           {...props}
         />
         
@@ -53,7 +55,7 @@ export default function Input({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="px-4 py-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
           >
             {showPassword ? (
               <EyeOff className="w-5 h-5" />

@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
-import { createUser, deleteUser, getAllUsers, updateUser } from '../services/users/users';
-
+import { useState, useEffect } from "react";
+import {
+  createUser,
+  deleteUser,
+  getAllUsers,
+  updateUser,
+} from "../services/users/users";
 
 export function useUsers() {
   const [users, setUsers] = useState([]);
@@ -14,8 +18,8 @@ export function useUsers() {
       const userData = await getAllUsers();
       setUsers(userData);
     } catch (error) {
-      console.error('Failed to fetch users:', error);
-      setError('Failed to fetch users');
+      console.error("Failed to fetch users:", error);
+      setError("Failed to fetch users");
     } finally {
       setLoading(false);
     }
@@ -27,8 +31,8 @@ export function useUsers() {
       await fetchUsers();
       return { success: true };
     } catch (error) {
-      console.error('Failed to create user:', error);
-      return { success: false, error: 'Failed to create user' };
+      console.error("Failed to create user:", error);
+      return { success: false, error: "Failed to create user" };
     }
   };
 
@@ -38,39 +42,37 @@ export function useUsers() {
       await fetchUsers();
       return { success: true };
     } catch (error) {
-      console.error('Failed to update user:', error);
-      return { success: false, error: 'Failed to update user' };
+      console.error("Failed to update user:", error);
+      return { success: false, error: "Failed to update user" };
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        await deleteUser(userId);
-        await fetchUsers();
-        return { success: true };
-      } catch (error) {
-        console.error('Failed to delete user:', error);
-        return { success: false, error: 'Failed to delete user' };
-      }
+    try {
+      await deleteUser(userId);
+      await fetchUsers();
+      return { success: true };
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      return { success: false, error: "Failed to delete user" };
     }
-    return { success: false };
   };
 
   const getUserStats = () => {
     const total = users.length;
-    const admins = users.filter(u => u.role === 'Admin').length;
-    const backoffice = users.filter(u => u.role === 'Backoffice').length;
-    const regularUsers = users.filter(u => u.role === 'User').length;
-    
+    const admins = users.filter((u) => u.role === "Admin").length;
+    const backoffice = users.filter((u) => u.role === "Backoffice").length;
+    const regularUsers = users.filter((u) => u.role === "User").length;
+
     return { total, admins, backoffice, regularUsers };
   };
 
   const filterUsers = (searchTerm, selectedRole) => {
-    return users.filter(user => {
-      const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           user.email.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesRole = selectedRole === 'All' || user.role === selectedRole;
+    return users.filter((user) => {
+      const matchesSearch =
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRole = selectedRole === "All" || user.role === selectedRole;
       return matchesSearch && matchesRole;
     });
   };
@@ -88,6 +90,6 @@ export function useUsers() {
     handleUpdateUser,
     handleDeleteUser,
     getUserStats,
-    filterUsers
+    filterUsers,
   };
 }
