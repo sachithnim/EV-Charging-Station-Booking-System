@@ -31,7 +31,7 @@ export default function StatsCard({
           </p>
         </div>
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconColorClasses[iconColor]}`}>
-          <Icon className="w-6 h-6" />
+          {Icon && <Icon className="w-6 h-6" />}
         </div>
       </div>
     </div>

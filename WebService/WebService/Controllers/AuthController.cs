@@ -44,7 +44,7 @@ namespace WebService.Controllers
         [HttpPost("evowner-login")]
         public async Task<IActionResult> EVOwnerLogin([FromBody] EVLoginRequest request)
         {
-            var token = await _service.EVOwnerLoginAsync(request.NIC);
+            var token = await _service.EVOwnerLoginAsync(request.NIC, request.Password);
             return Ok(new { Token = token });
         }
     }
@@ -58,5 +58,6 @@ namespace WebService.Controllers
     public class EVLoginRequest
     {
         public string NIC { get; set; }
+        public string Password { get; set; }
     }
 }

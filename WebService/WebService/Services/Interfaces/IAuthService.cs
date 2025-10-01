@@ -6,7 +6,7 @@ namespace WebService.Services.Interfaces
     {
         Task<string> RegisterUserAsync(User user);
         Task<string> loginAsync(string username,  string password);
-        Task<string> EVOwnerLoginAsync(string nic);
+        Task<string> EVOwnerLoginAsync(string nic, string password);
 
     }
 }

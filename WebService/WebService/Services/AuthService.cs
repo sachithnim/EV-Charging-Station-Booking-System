@@ -1,19 +1,12 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using WebService.Models;
 using WebService.Repositories.Interfaces;
 using WebService.Services.Interfaces;
-using BCrypt.Net;
 using WebService.Exceptions;
-using WebService.Exceptions;
-using WebService.Models;
-using WebService.Repositories.Interfaces;
-using WebService.Services.Interfaces;
 
 namespace WebService.Services
 {
@@ -35,6 +28,7 @@ namespace WebService.Services
         {
             var existing = (await _userRepo.FindAsync(u => u.Username == user.Username));
             if (existing.Count > 0) throw new BusinessException("Username already exists.");
+            if (await _userRepo.FindAsync(u => u.Email == user.Email) is { Count: > 0 }) throw new BusinessException("Email already exists.");
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             await _userRepo.CreateAsync(user);
             return user.Id;
@@ -51,10 +45,11 @@ namespace WebService.Services
         }
 
         // Login EV Owner (NIC-based, no password for simplicity)
-        public async Task<string> EVOwnerLoginAsync(string nic)
+        public async Task<string> EVOwnerLoginAsync(string nic, string password)
         {
             var owner = await _evOwnerRepo.GetByIdAsync(nic);
             if (owner == null || !owner.IsActive) throw new BusinessException("Invalid or inactive EV Owner.");
+            if (!BCrypt.Net.BCrypt.Verify(password, owner.Password)) throw new BusinessException("Invalid credentials.");
             return GenerateJwt(owner.NIC, "EVOwner");
         }
 
