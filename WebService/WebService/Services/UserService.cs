@@ -17,8 +17,18 @@ namespace WebService.Services
         public async Task<List<User>> GetAllAsync()
         {
             var users = await _userRepo.GetAllAsync();
-            users.ForEach(u => u.Password = null); 
-            return users;
+
+
+            var result = users
+                .OrderByDescending(u => u.CreatedAt)
+                .Select(u =>
+                {
+                    u.Password = null;
+                    return u;
+                })
+                .ToList();
+
+            return result;
         }
 
         public async Task<User> GetByIdAsync(string id)

@@ -1,3 +1,4 @@
+using WebService.Dtos;
 using WebService.Exceptions;
 using WebService.Models;
 using WebService.Repositories.Interfaces;
@@ -15,10 +16,37 @@ namespace WebService.Services
         }
 
         // Get all EV Owners
-        public async Task<List<EVOwner>> GetAllAsync() => await _repo.GetAllAsync();
+        public async Task<List<EVOwnerDto>> GetAllAsync()
+        {
+            var owners = await _repo.GetAllAsync();
+            return owners
+                .OrderByDescending(o => o.CreatedAt)
+                .Select(o => new EVOwnerDto
+                {
+                    NIC = o.NIC,
+                    Name = o.Name,
+                    Email = o.Email,
+                    Phone = o.Phone,
+                    Address = o.Address,
+                    IsActive = o.IsActive
+                }).ToList();
+        }
 
         // Get by NIC
-        public async Task<EVOwner> GetByNICAsync(string nic) => await _repo.GetByIdAsync(nic);
+        public async Task<EVOwnerDto> GetByNICAsync(string nic)
+        {
+            var owner = await _repo.GetByIdAsync(nic);
+            if (owner == null) throw new BusinessException("EV Owner not found.");
+            return new EVOwnerDto
+            {
+                NIC = owner.NIC,
+                Name = owner.Name,
+                Email = owner.Email,
+                Phone = owner.Phone,
+                Address = owner.Address,
+                IsActive = owner.IsActive
+            };
+        }
 
         // Create EV Owner
         public async Task<string> CreateAsync(EVOwner owner)
