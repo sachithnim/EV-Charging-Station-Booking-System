@@ -49,7 +49,7 @@ namespace WebService.Controllers
         }
 
         [HttpPost("{nic}/activate")]
-        [Authorize(Roles = "Backoffice")]
+        [Authorize(Roles = "Backoffice,Admin")]
         public async Task<IActionResult> Activate(string nic)
         {
             await _service.ActivateAsync(nic);
