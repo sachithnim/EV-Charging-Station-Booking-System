@@ -6,6 +6,9 @@ import SignIn from "../layouts/signIn/SignIn";
 import ChargingStationManagement from "../layouts/chargingStationManagement/ChargingStationManagement";
 import BookingManagement from "../layouts/bookingManagement/BookingManagement";
 import UserManagement from "../layouts/userManagement/UserManagement";
+import StationForm from "../layouts/chargingStationManagement/StationForm";
+
+
 
 export const router = createBrowserRouter([
     {
@@ -28,12 +31,11 @@ export const router = createBrowserRouter([
             {
                 path: "charging-station-management",
                 children: [
-                    {
-                        index: true,
-                        element: <ChargingStationManagement />
-                    }
+                    { index: true, element: <ChargingStationManagement /> },
+                    { path: "new", element: <StationForm /> },
+                    { path: ":id/edit", element: <StationForm /> },
                 ]
-            },
+                },
             {
                 path: "booking-management",
                 children: [
@@ -57,5 +59,5 @@ export const router = createBrowserRouter([
     {
         path: "/sign-in",
         element: <SignIn />
-    }
+    },
 ])
