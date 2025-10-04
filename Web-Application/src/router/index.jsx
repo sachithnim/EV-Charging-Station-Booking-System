@@ -7,6 +7,7 @@ import ChargingStationManagement from "../layouts/chargingStationManagement/Char
 import BookingManagement from "../layouts/bookingManagement/BookingManagement";
 import UserManagement from "../layouts/userManagement/UserManagement";
 import StationForm from "../layouts/chargingStationManagement/StationForm";
+import StationDetails from "../layouts/chargingStationManagement/StationDetails";
 
 
 
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
                     { index: true, element: <ChargingStationManagement /> },
                     { path: "new", element: <StationForm /> },
                     { path: ":id/edit", element: <StationForm /> },
+                    { path: ":id", element: <StationDetails /> },
                 ]
                 },
             {
