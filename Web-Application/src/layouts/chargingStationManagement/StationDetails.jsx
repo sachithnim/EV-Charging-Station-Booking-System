@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/button/Button";
 import { getStationById } from "../../services/stations/stations";
+import MapPreviewLeaflet from "../../components/maps/MapPreviewLeaflet";
 
 export default function StationDetails() {
   const { id } = useParams();
@@ -51,6 +52,13 @@ export default function StationDetails() {
           <p><b>Longitude:</b> {station.longitude}</p>
         </div>
       </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Location</h2>
+        <p className="text-sm text-gray-600 mb-3">{station.address}</p>
+        <MapPreviewLeaflet lat={station.latitude} lng={station.longitude} />
+    </div>
+
 
       {/* Schedule */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
