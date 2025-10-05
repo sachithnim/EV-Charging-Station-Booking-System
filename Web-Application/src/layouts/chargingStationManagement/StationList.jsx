@@ -66,8 +66,6 @@ export default function StationList({ onCreate, onView, onEdit }) {
     )}
   ];
 
-  const onRowClick = (row) => onView?.(row);
-
   const handleConfirm = async () => {
     setConfirmOpen(false);
     if (!pendingDeactivateId) return;
@@ -107,7 +105,7 @@ export default function StationList({ onCreate, onView, onEdit }) {
       {error && <div className="text-red-600">{error}</div>}
 
       {!loading && (
-        <Table columns={columns} data={filtered} onRowClick={onRowClick} />
+        <Table columns={columns} data={filtered} />
       )}
 
       <Modal isOpen={confirmOpen} onClose={()=>setConfirmOpen(false)} title="Confirm">
