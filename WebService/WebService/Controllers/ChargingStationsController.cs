@@ -58,6 +58,14 @@ namespace WebService.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/activate")]
+        [Authorize(Roles = "Backoffice,Admin,StationOperator")]
+        public async Task<IActionResult> Activate(string id)
+        {
+            await _service.ActivateStationAsync(id);
+            return NoContent();
+        }
+
         [HttpPost("{id}/deactivate")]
         [Authorize(Roles = "Backoffice,Admin,StationOperator")]
         public async Task<IActionResult> DeactivateStation(string id)
@@ -65,6 +73,16 @@ namespace WebService.Controllers
             await _service.DeactivateStationAsync(id);
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Backoffice,Admin")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _service.DeleteStationAsync(id);
+            return NoContent();
+        }
+
+
 
         [HttpGet("nearby")]
         [AllowAnonymous]
