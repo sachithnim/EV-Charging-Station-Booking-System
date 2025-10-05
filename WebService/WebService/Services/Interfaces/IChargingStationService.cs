@@ -11,7 +11,10 @@ namespace WebService.Services.Interfaces
         Task<string> CreateAsync(CreateStationDto dto, string? userId = null);
         Task UpdateDetailsAsync(string id, UpdateStationDto dto, string? userId = null);
         Task UpdateScheduleAsync(string id, List<ScheduleWindowDto> schedule, string? userId = null);
+        Task ActivateStationAsync(string id);
         Task DeactivateStationAsync(string id);
+        Task DeleteStationAsync(string id);
+
 
         // Slots (CRUD)
         Task<List<Slot>> GetSlotsAsync(string stationId);
