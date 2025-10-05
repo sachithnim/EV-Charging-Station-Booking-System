@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { 
-  getStations, 
-  deactivateStation 
+  getStations,
+  activateStation,
+  deactivateStation,
+  deleteStation
 } from "../services/stations/stations";
 
 export function useStations(initialFilters = {}) {
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError]   = useState(null);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
 
   const fetchStations = async () => {
@@ -24,14 +26,40 @@ export function useStations(initialFilters = {}) {
     }
   };
 
+  // Deactivate
   const handleDeactivateStation = async (id) => {
     try {
       await deactivateStation(id);
       await fetchStations();
       return { success: true };
     } catch (err) {
-      // 409 expected when bookings exist
       const msg = err?.response?.data?.message || "Failed to deactivate station";
+      console.error(msg);
+      return { success: false, error: msg };
+    }
+  };
+
+  // Activate
+  const handleActivateStation = async (id) => {
+    try {
+      await activateStation(id);
+      await fetchStations();
+      return { success: true };
+    } catch (err) {
+      const msg = err?.response?.data?.message || "Failed to activate station";
+      console.error(msg);
+      return { success: false, error: msg };
+    }
+  };
+
+  // Delete
+  const handleDeleteStation = async (id) => {
+    try {
+      await deleteStation(id);
+      await fetchStations();
+      return { success: true };
+    } catch (err) {
+      const msg = err?.response?.data?.message || "Failed to delete station";
       console.error(msg);
       return { success: false, error: msg };
     }
@@ -39,7 +67,6 @@ export function useStations(initialFilters = {}) {
 
   useEffect(() => {
     fetchStations();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(filters)]);
 
   return {
@@ -49,6 +76,8 @@ export function useStations(initialFilters = {}) {
     filters,
     setFilters,
     fetchStations,
+    handleActivateStation,
     handleDeactivateStation,
+    handleDeleteStation,
   };
 }
