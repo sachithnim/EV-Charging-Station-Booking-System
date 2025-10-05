@@ -91,6 +91,21 @@ namespace WebService.Services
             await _stations.UpdateAsync(id, station);
         }
 
+        public async Task ActivateStationAsync(string id)
+        {
+            var station = await _stations.GetByIdAsync(id)
+                          ?? throw new BusinessException("Charging station not found.");
+
+            // Reactivate only if currently inactive
+            if (station.IsActive)
+                throw new BusinessException("Station is already active.");
+
+            station.IsActive = true;
+            station.UpdatedAt = DateTime.UtcNow;
+
+            await _stations.UpdateAsync(id, station);
+        }
+
         public async Task DeactivateStationAsync(string id)
         {
             var station = await _stations.GetByIdAsync(id)
@@ -109,6 +124,24 @@ namespace WebService.Services
             station.UpdatedAt = DateTime.UtcNow;
             await _stations.UpdateAsync(id, station);
         }
+
+        public async Task DeleteStationAsync(string id)
+        {
+            var station = await _stations.GetByIdAsync(id)
+                          ?? throw new BusinessException("Charging station not found.");
+
+            var now = DateTime.UtcNow;
+            var hasBookings = await _bookings.FindAsync(b =>
+                b.StationId == id &&
+                (b.Status == "Pending" || b.Status == "Approved" || b.Status == "InProgress") &&
+                b.EndDateTime >= now);
+
+            if (hasBookings.Count > 0)
+                throw new BusinessException("Cannot delete: station has active or upcoming bookings.");
+
+            await _stations.DeleteAsync(id);
+        }
+
 
         //  Slots (CRUD) 
         public async Task<List<Slot>> GetSlotsAsync(string stationId)
