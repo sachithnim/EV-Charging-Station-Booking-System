@@ -9,6 +9,8 @@ import {
   getStationById,
   updateStation,
 } from "../../services/stations/stations";
+import AddressSearchNominatim from "../../components/maps/AddressSearchNominatim";
+import MapPickerLeaflet from "../../components/maps/MapPickerLeaflet";
 
 export default function StationForm() {
   const navigate = useNavigate();
@@ -91,12 +93,16 @@ export default function StationForm() {
           onChange={handleChange}
           required
         />
-        <Input
-          label="Address"
-          name="address"
+        <AddressSearchNominatim
           value={formData.address}
-          onChange={handleChange}
-          required
+          onSelect={({ address, lat, lng }) => {
+            setFormData((prev) => ({
+              ...prev,
+              address,
+              latitude: String(lat.toFixed(6)),
+              longitude: String(lng.toFixed(6)),
+            }));
+          }}
         />
         <Input
           label="Latitude"
@@ -128,7 +134,24 @@ export default function StationForm() {
         </div>
       </div>
 
-      <div>
+      <div className="relative z-0">
+        <label className="text-sm font-semibold text-gray-700">
+          Pick on Map
+        </label>
+        <MapPickerLeaflet
+          lat={parseFloat(formData.latitude)}
+          lng={parseFloat(formData.longitude)}
+          onChange={({ lat, lng }) => {
+            setFormData((prev) => ({
+              ...prev,
+              latitude: String(lat.toFixed(6)),
+              longitude: String(lng.toFixed(6)),
+            }));
+          }}
+        />
+      </div>
+
+      <div className="relative z-10">
         <label className="text-sm font-semibold text-gray-700 mb-2 block">
           Schedule
         </label>
@@ -141,9 +164,11 @@ export default function StationForm() {
               >
                 <span>
                   <b>
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
-                      s.dayOfWeek
-                    ]}
+                    {
+                      ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
+                        s.dayOfWeek
+                      ]
+                    }
                   </b>{" "}
                   | {s.startTime} - {s.endTime}
                 </span>
