@@ -26,10 +26,21 @@ export const updateStationSchedule = async (id, schedule) => {
   return res.data;
 };
 
+export const activateStation = async (id) => {
+  const res = await axiosInstance.post(`/ChargingStations/${id}/activate`);
+  return res.data;
+};
+
 export const deactivateStation = async (id) => {
   const res = await axiosInstance.post(`/ChargingStations/${id}/deactivate`);
   return res.data;
 };
+
+export const deleteStation = async (id) => {
+  const res = await axiosInstance.delete(`/ChargingStations/${id}`);
+  return res.data;
+};
+
 
 // Nearby (for dashboard map)
 export const getNearbyStations = async (params) => {
