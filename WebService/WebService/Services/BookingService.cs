@@ -23,6 +23,9 @@ namespace WebService.Services
             return booking;
         }
 
+        public async Task<List<Booking>> GetByNicAsync(string nic) =>
+            await _repo.FindAsync(b => b.Nic == nic);
+
         public async Task<string> CreateAsync(Booking booking)
         {
             // Rule: reservation date must be within 7 days

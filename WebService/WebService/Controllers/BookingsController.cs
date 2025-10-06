@@ -24,6 +24,10 @@ namespace WebService.Controllers
         [Authorize]
         public async Task<IActionResult> GetById(string id) => Ok(await _service.GetByIdAsync(id));
 
+        [HttpGet("owner/{nic}")]
+        [Authorize]
+        public async Task<IActionResult> GetByNic(string nic) => Ok(await _service.GetByNicAsync(nic));
+
         [HttpPost]
         [Authorize] // EV Owner can create
         public async Task<IActionResult> Create([FromBody] Booking booking)
