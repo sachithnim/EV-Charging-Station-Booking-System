@@ -8,7 +8,8 @@ namespace WebService.Services.Interfaces
         Task<List<EVOwnerDto>> GetAllAsync();
         Task<EVOwnerDto> GetByNICAsync(string nic);
         Task<string> CreateAsync(EVOwner owner);
-        Task UpdateAsync(string nic, EVOwner owner);
+        Task UpdateAsync(string nic, UpdateEvOwnerDto owner);
+        Task ChangePasswordAsync(string nic, string oldPassword, string newPassword);
         Task DeleteAsync(string nic);
         Task ActivateAsync(string nic);
         Task DeactivateAsync(string nic);

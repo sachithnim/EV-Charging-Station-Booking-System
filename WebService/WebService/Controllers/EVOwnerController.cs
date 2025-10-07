@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebService.Models;
 using WebService.Services.Interfaces;
+using WebService.Dtos;
 
 namespace WebService.Controllers
 {
@@ -34,9 +35,17 @@ namespace WebService.Controllers
 
         [HttpPut("{nic}")]
         [Authorize]
-        public async Task<IActionResult> Update(string nic, EVOwner owner)
+        public async Task<IActionResult> Update(string nic, UpdateEvOwnerDto owner)
         {
             await _service.UpdateAsync(nic, owner);
+            return NoContent();
+        }
+
+        [HttpPost("{nic}/change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(string nic, [FromBody] ChangePasswordRequest request)
+        {
+            await _service.ChangePasswordAsync(nic, request.OldPassword, request.NewPassword);
             return NoContent();
         }
 
