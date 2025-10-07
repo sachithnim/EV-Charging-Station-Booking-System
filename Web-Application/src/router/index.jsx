@@ -6,6 +6,7 @@ import SignIn from "../layouts/signIn/SignIn";
 import ChargingStationManagement from "../layouts/chargingStationManagement/ChargingStationManagement";
 import BookingManagement from "../layouts/bookingManagement/BookingManagement";
 import UserManagement from "../layouts/userManagement/UserManagement";
+import Profile from "../layouts/profile/Profile";
 
 export const router = createBrowserRouter([
     {
@@ -49,6 +50,15 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         element: <UserManagement />
+                    }
+                ]
+            },
+            {
+                path: "profile",
+                children: [
+                    {
+                        index: true,
+                        element: <Profile />
                     }
                 ]
             }

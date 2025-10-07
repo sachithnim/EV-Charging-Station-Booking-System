@@ -47,13 +47,27 @@ namespace WebService.Services
             // Update fields
             existingUser.Email = user.Email ?? existingUser.Email;
             existingUser.Role = user.Role ?? existingUser.Role;
-            if (!string.IsNullOrEmpty(user.Password))
-            {
-                existingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            }
+            existingUser.Username = user.Username ?? existingUser.Username;
+            existingUser.UpdatedAt = DateTime.UtcNow;
 
             await _userRepo.UpdateAsync(id, existingUser);
         }
+
+        public async Task ChangePasswordAsync(string id, string oldPassword, string newPassword)
+        {
+            var user = await _userRepo.GetByIdAsync(id);
+            if (user == null) throw new BusinessException("User not found.");
+
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password))
+                throw new BusinessException("Old password is incorrect.");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _userRepo.UpdateAsync(id, user);
+        }
+
+
 
         public async Task DeleteAsync(string id)
         {
