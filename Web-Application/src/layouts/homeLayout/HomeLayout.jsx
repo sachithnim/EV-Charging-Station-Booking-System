@@ -54,7 +54,7 @@ export default function HomeLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen overflow-hidden bg-gray-50 flex">
       {/* Sidebar */}
       <Sidebar 
         isOpen={sidebarOpen || !isMobile} 
@@ -69,7 +69,7 @@ export default function HomeLayout() {
         <Header onMenuClick={handleMenuClick} currentUser={currentUser}/>
         
         {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             <Outlet context={{ currentUser }}/>
           </div>

@@ -1,13 +1,12 @@
-import { useState } from 'react';
-import { Users, Search, Plus, User, Shield } from 'lucide-react';
-import { useUsers } from '../../hooks/useUsers';
-import StatsCard from '../../components/statsCard/StatsCard';
-import UserTable from './UserTable';
-import Modal from '../../components/modal/Modal';
-import UserForm from './UserForm';
+import { useState } from "react";
+import { Users, Search, Plus, User, Shield } from "lucide-react";
+import { useUsers } from "../../hooks/useUsers";
+import StatsCard from "../../components/statsCard/StatsCard";
+import UserTable from "./UserTable";
+import Modal from "../../components/modal/Modal";
+import UserForm from "./UserForm";
 import Button from "../../components/button/Button";
-import toast from 'react-hot-toast';
-
+import toast from "react-hot-toast";
 
 export default function UserManagement() {
   const {
@@ -16,18 +15,18 @@ export default function UserManagement() {
     handleUpdateUser,
     handleDeleteUser,
     getUserStats,
-    filterUsers
+    filterUsers,
   } = useUsers();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState("All");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
 
-  const roles = ['All', 'Admin', 'Backoffice'];
+  const roles = ["All", "Admin", "Backoffice"];
   const stats = getUserStats();
   const filteredUsers = filterUsers(searchTerm, selectedRole);
 
@@ -35,7 +34,7 @@ export default function UserManagement() {
     setFormLoading(true);
     const result = await handleCreateUser(userData);
     setFormLoading(false);
-    
+
     if (result.success) {
       setShowCreateModal(false);
     }
@@ -45,7 +44,7 @@ export default function UserManagement() {
     setFormLoading(true);
     const result = await handleUpdateUser(selectedUser.id, userData);
     setFormLoading(false);
-    
+
     if (result.success) {
       setShowEditModal(false);
       setSelectedUser(null);
@@ -56,13 +55,13 @@ export default function UserManagement() {
     setFormLoading(true);
     const result = await handleDeleteUser(selectedUser);
     setFormLoading(false);
-    
+
     if (result.success) {
       setShowDeleteModal(false);
       setSelectedUser(null);
-      toast.success('User deleted successfully!');
+      toast.success("User deleted successfully!");
     }
-  }
+  };
 
   const openEditModal = (user) => {
     setSelectedUser(user);
@@ -73,7 +72,7 @@ export default function UserManagement() {
     setSelectedUser(user);
     console.log(user);
     setShowDeleteModal(true);
-  }
+  };
 
   const closeModals = () => {
     setShowCreateModal(false);
@@ -133,11 +132,11 @@ export default function UserManagement() {
           valueColor="blue"
         />
         <StatsCard
-          title="Regular Users"
-          value={stats.regularUsers}
+          title="Station Operators"
+          value={stats.stationOperators}
           icon={User}
-          iconColor="gray"
-          valueColor="gray"
+          iconColor="green"
+          valueColor="green"
         />
       </div>
 
@@ -189,11 +188,7 @@ export default function UserManagement() {
       </Modal>
 
       {/* Edit User Modal */}
-      <Modal
-        isOpen={showEditModal}
-        onClose={closeModals}
-        title="Edit User"
-      >
+      <Modal isOpen={showEditModal} onClose={closeModals} title="Edit User">
         <UserForm
           user={selectedUser}
           onSubmit={handleEditSubmit}
@@ -209,11 +204,7 @@ export default function UserManagement() {
         <div className="space-y-6">
           <p>Are you sure you want to delete this user?</p>
           <div className="flex justify-end">
-            <Button
-              variant="secondary"
-              onClick={closeModals}
-              className="mr-2"
-            >
+            <Button variant="secondary" onClick={closeModals} className="mr-2">
               Cancel
             </Button>
             <Button

@@ -62,9 +62,9 @@ export function useUsers() {
     const total = users.length;
     const admins = users.filter((u) => u.role === "Admin").length;
     const backoffice = users.filter((u) => u.role === "Backoffice").length;
-    const regularUsers = users.filter((u) => u.role === "User").length;
+    const stationOperators = users.filter((u) => u.role === "StationOperator").length;
 
-    return { total, admins, backoffice, regularUsers };
+    return { total, admins, backoffice, stationOperators };
   };
 
   const filterUsers = (searchTerm, selectedRole) => {
