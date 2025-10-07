@@ -8,6 +8,10 @@ namespace WebService.Services.Interfaces
         Task<Booking> GetByIdAsync(string id);
         Task<string> CreateAsync(Booking booking);
         Task UpdateAsync(string id, Booking booking);
+
+        Task CancelAsync(string id);
+        Task ApproveAsync(string id);
+        Task CompleteAsync(string id);
         Task<List<Booking>> GetByNicAsync(string nic);
     }
 }

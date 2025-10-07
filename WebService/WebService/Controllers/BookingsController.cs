@@ -43,5 +43,29 @@ namespace WebService.Controllers
             await _service.UpdateAsync(id, booking);
             return NoContent();
         }
+
+        [HttpPatch("{id}/cancel")]
+        [Authorize]
+        public async Task<IActionResult> Cancel(string id)
+        {
+            await _service.CancelAsync(id);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/approve")]
+        [Authorize(Roles = "Backoffice,StationOperator")]
+        public async Task<IActionResult> Approve(string id)
+        {
+            await _service.ApproveAsync(id);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/complete")]
+        [Authorize(Roles = "StationOperator")]
+        public async Task<IActionResult> Complete(string id)
+        {
+            await _service.CompleteAsync(id);
+            return NoContent();
+        }
     }
 }

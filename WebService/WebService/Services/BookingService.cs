@@ -26,6 +26,7 @@ namespace WebService.Services
         public async Task<List<Booking>> GetByNicAsync(string nic) =>
             await _repo.FindAsync(b => b.Nic == nic);
 
+
         public async Task<string> CreateAsync(Booking booking)
         {
             // Rule: reservation date must be within 7 days
@@ -65,6 +66,40 @@ namespace WebService.Services
             updated.Id = id;
             updated.UpdatedAt = DateTime.UtcNow;
             await _repo.UpdateAsync(id, updated);
+        }
+
+        public async Task CancelAsync(string id)
+        {
+            var booking = await _repo.GetByIdAsync(id);
+            if (booking == null) throw new BusinessException("Booking not found.");
+
+            if ((booking.StartTime - DateTime.UtcNow).TotalHours < 12)
+                throw new BusinessException("Cannot cancel booking within 12 hours of start time.");
+
+            booking.Status = "Cancelled";
+            booking.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(id, booking);
+        }
+
+        public async Task ApproveAsync(string id)
+        {
+            var booking = await _repo.GetByIdAsync(id);
+            if (booking == null) throw new BusinessException("Booking not found.");
+
+            booking.Status = "Approved";
+            booking.QrToken = Guid.NewGuid().ToString(); // dummy QR token
+            booking.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(id, booking);
+        }
+
+        public async Task CompleteAsync(string id)
+        {
+            var booking = await _repo.GetByIdAsync(id);
+            if (booking == null) throw new BusinessException("Booking not found.");
+
+            booking.Status = "Completed";
+            booking.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(id, booking);
         }
     }
 }
