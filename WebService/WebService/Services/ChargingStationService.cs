@@ -29,7 +29,7 @@ namespace WebService.Services
                 (isActive == null || s.IsActive == isActive));
         }
 
-        public Task<ChargingStation?> GetByIdAsync(string id) => _stations.GetByIdAsync(id);
+        public async Task<ChargingStation?> GetByIdAsync(string id) => await _stations.GetByIdAsync(id);
 
         public async Task<string> CreateAsync(CreateStationDto dto, string? userId = null)
         {
@@ -115,9 +115,9 @@ namespace WebService.Services
             var hasActive = await _bookings.FindAsync(b =>
                 b.StationId == id &&
                 (b.Status == "Pending" || b.Status == "Approved" || b.Status == "InProgress") &&
-                b.EndDateTime >= now);
+                b.EndTime >= now);
 
-            if (hasActive.Count > 0)
+            if (hasActive.Count() > 0)
                 throw new BusinessException("Cannot deactivate: station has active or upcoming bookings.");
 
             station.IsActive = false;
@@ -134,9 +134,9 @@ namespace WebService.Services
             var hasBookings = await _bookings.FindAsync(b =>
                 b.StationId == id &&
                 (b.Status == "Pending" || b.Status == "Approved" || b.Status == "InProgress") &&
-                b.EndDateTime >= now);
+                b.EndTime >= now);
 
-            if (hasBookings.Count > 0)
+            if (hasBookings.Count() > 0)
                 throw new BusinessException("Cannot delete: station has active or upcoming bookings.");
 
             await _stations.DeleteAsync(id);
@@ -203,9 +203,9 @@ namespace WebService.Services
                 b.StationId == stationId &&
                 b.SlotId == slotId &&
                 (b.Status == "Pending" || b.Status == "Approved" || b.Status == "InProgress") &&
-                b.EndDateTime >= now);
+                b.EndTime >= now);
 
-            if (hasActive.Count > 0)
+            if (hasActive.Count() > 0)
                 throw new BusinessException("Cannot deactivate: slot has active or upcoming bookings.");
 
             slot.IsActive = false;
@@ -223,9 +223,9 @@ namespace WebService.Services
                 b.StationId == stationId &&
                 b.SlotId == slotId &&
                 (b.Status == "Pending" || b.Status == "Approved" || b.Status == "InProgress") &&
-                b.EndDateTime >= now);
+                b.EndTime >= now);
 
-            if (hasActive.Count > 0)
+            if (hasActive.Count() > 0)
                 throw new BusinessException("Cannot delete: slot has active or upcoming bookings.");
 
             var removed = station.Slots.RemoveAll(s => s.Id == slotId);

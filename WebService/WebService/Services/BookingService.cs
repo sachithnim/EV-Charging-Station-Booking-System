@@ -52,7 +52,7 @@ namespace WebService.Services
             booking.UpdatedAt = DateTime.UtcNow;
 
             await _repo.CreateAsync(booking);
-            return booking.Id;
+            return booking.Id ?? throw new InvalidOperationException("Booking ID was not generated");
         }
 
         public async Task UpdateAsync(string id, Booking updated)
