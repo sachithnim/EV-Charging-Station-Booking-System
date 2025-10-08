@@ -109,6 +109,7 @@ export default function Profile() {
       toast.success('Profile updated successfully!');
     } catch (error) {
       toast.error('Failed to update profile. Please try again.');
+      setErrorMessage(error?.response?.data?.message || 'Failed to update profile. Please try again.');
     } finally {
       setProfileLoading(false);
     }
@@ -190,7 +191,7 @@ export default function Profile() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-success-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary-800 to-primary-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
                 {currentUser?.name?.charAt(0)?.toUpperCase() || 'U'}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">

@@ -10,14 +10,14 @@
 
 @layer components {
   .btn-gradient {
-    @apply bg-gradient-to-br from-primary-500 to-success-500;
+    @apply bg-gradient-to-br from-primary-800 to-primary-500;
   }
   
   .bg-gradient-primary {
-    @apply bg-gradient-to-br from-primary-500 to-success-500;
+    @apply bg-gradient-to-br from-primary-800 to-primary-600;
   }
   
   .text-gradient {
-    @apply bg-gradient-to-br from-primary-500 to-success-500 bg-clip-text text-transparent;
-  }
+    @apply bg-gradient-to-br from-primary-800 to-primary-600 bg-clip-text text-transparent;
+  } 
 }

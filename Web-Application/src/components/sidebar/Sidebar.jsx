@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import {
   LayoutDashboard,
   Users,
@@ -65,15 +66,16 @@ export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
       `}
       >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-success-500 rounded-xl flex items-center justify-center text-white">
+        <div className="flex items-center justify-between p-2 border-b border-gray-200">
+          <div className="">
+            {/* <div className="w-10 h-10 bg-gradient-to-br from-primary-800 to-primary-500 rounded-xl flex items-center justify-center text-white">
               <Zap className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-800">ChargePoint</h2>
               <p className="text-xs text-gray-500">Admin Panel</p>
-            </div>
+            </div> */}
+            <img src={logo} alt="Logo" />
           </div>
 
           {/* Close button for mobile */}
@@ -102,7 +104,7 @@ export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
                   ${
                     isActive
-                      ? "bg-gradient-to-r from-primary-500 to-success-500 text-white shadow-lg shadow-primary-500/30"
+                      ? "bg-gradient-to-r from-primary-800 to-primary-600 text-white shadow-lg shadow-primary-500/30"
                       : "text-gray-700 hover:bg-gray-100 hover:text-primary-600"
                   }
                 `}
@@ -132,7 +134,7 @@ export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
             onClick={isMobile ? onClose : undefined}
           >
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-success-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-800 to-primary-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                 A
               </div>
               <div className="flex-1 min-w-0">
@@ -147,7 +149,7 @@ export default function Sidebar({ isOpen, onClose, isMobile, currentUser }) {
           </NavLink>
           <div className="mt-4">
             <button
-              className="w-full px-4 py-2 bg-red-400 text-white rounded-xl hover:bg-red-500 transition-colors font-semibold"
+              className="w-full px-4 py-2 bg-slate-300 text-black rounded-xl hover:bg-slate-400 transition-colors font-semibold"
               onClick={logout}
             >
               Sign Out

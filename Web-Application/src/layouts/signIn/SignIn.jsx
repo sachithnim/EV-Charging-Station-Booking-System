@@ -5,6 +5,7 @@ import Button from "./../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth/auth";
 import toast from "react-hot-toast";
+import logo from "../../assets/logo.png";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -73,7 +74,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-success-500">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-800 to-primary-500">
         <div
           className="absolute inset-0 opacity-20 animate-float"
           style={{
@@ -89,17 +90,18 @@ export default function SignIn() {
       {/* Sign In Card */}
       <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 lg:p-12 w-full max-w-md relative overflow-hidden">
         {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-success-500"></div>
+        {/* <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-800 to-primary-500"></div> */}
 
         {/* Header */}
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white">
+            {/* <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white">
               <Zap className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
               ChargePoint
-            </h1>
+            </h1> */}
+            <img src={logo} alt="Logo" className="" />
           </div>
           <p className="text-sm sm:text-base text-gray-600">
             Power up your journey with smart EV charging

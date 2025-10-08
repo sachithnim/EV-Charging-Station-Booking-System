@@ -50,7 +50,7 @@ export default function Header({ onMenuClick, currentUser }) {
               <p className="text-xs text-gray-500">{currentUser?.role}</p>
             </div>
             <NavLink to="/profile">
-              <button className="w-10 h-10 bg-gradient-to-br from-primary-500 to-success-500 rounded-full flex items-center justify-center text-white font-semibold hover:shadow-lg transition-all duration-200">
+              <button className="w-10 h-10 bg-gradient-to-br from-primary-800 to-primary-500 rounded-full flex items-center justify-center text-white font-semibold hover:shadow-lg transition-all duration-200">
                 <User className="w-5 h-5" />
               </button>
             </NavLink>
