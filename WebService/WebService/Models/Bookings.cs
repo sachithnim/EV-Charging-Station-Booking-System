@@ -10,6 +10,8 @@ namespace WebService.Models
         public string? Id { get; set; }
 
         public required string Nic { get; set; }
+
+        public required string Name { get; set; }
         public string StationId { get; set; } = "ST001";
         public string SlotId { get; set; } = "S1";
 
@@ -17,7 +19,6 @@ namespace WebService.Models
         public DateTime EndTime { get; set; }
 
         public string Status { get; set; } = "Pending";
-        // Allowed: Pending | Approved | Cancelled | Completed
 
         public string? QrToken { get; set; }
 

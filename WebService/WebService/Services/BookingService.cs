@@ -36,6 +36,7 @@ namespace WebService.Services
             // Rule: prevent overlapping slot bookings
             var conflicts = await _repo.FindAsync(b =>
                 b.StationId == booking.StationId &&
+                b.Name == booking.Name &&
                 b.SlotId == booking.SlotId &&
                 b.Status != "Cancelled" &&
                 (
