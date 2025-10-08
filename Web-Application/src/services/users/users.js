@@ -40,6 +40,16 @@ const updateUser = async (id, userData) => {
     }
 };
 
+const changeUserPassword = async (id, passwordData) => {
+    try {
+        const response = await axiosInstance.post(`/user/${id}/change-password`, passwordData);
+        return response.data;
+    } catch (error) {
+        console.error("Error changing user password:", error);
+        throw error;
+    }
+}
+
 const deleteUser = async (id) => {
     try {
         const response = await axiosInstance.delete(`/user/${id}`);
@@ -50,4 +60,4 @@ const deleteUser = async (id) => {
     }
 };
 
-export { createUser, getAllUsers, getUserById, updateUser, deleteUser };
+export { createUser, getAllUsers, getUserById, updateUser, deleteUser, changeUserPassword };

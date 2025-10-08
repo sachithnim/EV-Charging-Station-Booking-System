@@ -93,7 +93,7 @@ export default function UserForm({
         required
       />
 
-      <Input
+      {!isEditMode &&<Input
         type="password"
         label={isEditMode ? "Password (leave blank to keep current)" : "Password"}
         value={formData.password}
@@ -101,7 +101,7 @@ export default function UserForm({
         error={formErrors.password}
         placeholder={isEditMode ? "Enter new password or leave blank" : "Enter password"}
         required={!isEditMode}
-      />
+      />}
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-gray-700">
@@ -114,6 +114,7 @@ export default function UserForm({
         >
           <option value="Backoffice">Backoffice</option>
           <option value="Admin">Admin</option>
+          <option value="StationOperator">StationOperator</option>
         </select>
         {formErrors.role && (
           <span className="text-sm text-red-500">{formErrors.role}</span>

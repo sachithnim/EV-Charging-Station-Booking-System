@@ -58,14 +58,44 @@ namespace WebService.Services
             return owner.NIC;
         }
 
-        // Update EV Owner
-        public async Task UpdateAsync(string nic, EVOwner owner)
+        // Update EV Owner (Profile only)
+        public async Task UpdateAsync(string nic, UpdateEvOwnerDto owner)
         {
             var existing = await _repo.GetByIdAsync(nic);
-            if (existing == null) throw new BusinessException("EV Owner not found.");
-            if (owner.Email != existing.Email && await _repo.FindAsync(o => o.Email == owner.Email) is { Count: > 0 }) throw new BusinessException("Email already exists.");
-            owner.Password = BCrypt.Net.BCrypt.HashPassword(owner.Password);
-            owner.NIC = nic;
+            if (existing == null)
+                throw new BusinessException("EV Owner not found.");
+
+            // Validate unique email if changed
+            if (owner.Email != existing.Email &&
+                await _repo.FindAsync(o => o.Email == owner.Email) is { Count: > 0 })
+                throw new BusinessException("Email already exists.");
+
+            // Only update profile fields
+            existing.Name = owner.Name;
+            existing.Email = owner.Email;
+            existing.Phone = owner.Phone;
+            existing.Address = owner.Address;
+            existing.UpdatedAt = DateTime.UtcNow;
+
+            await _repo.UpdateAsync(nic, existing);
+        }
+
+        // Update EV Owner
+        // Change Password
+        public async Task ChangePasswordAsync(string nic, string oldPassword, string newPassword)
+        {
+            var owner = await _repo.GetByIdAsync(nic);
+            if (owner == null)
+                throw new BusinessException("EV Owner not found.");
+
+            // Validate old password
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, owner.Password))
+                throw new BusinessException("Old password is incorrect.");
+
+            // Hash and update new password
+            owner.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            owner.UpdatedAt = DateTime.UtcNow;
+
             await _repo.UpdateAsync(nic, owner);
         }
 

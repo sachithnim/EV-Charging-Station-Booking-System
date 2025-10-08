@@ -50,9 +50,20 @@ namespace WebService.Controllers
             {
                 Email = userDto.Email,
                 Role = userDto.Role,
-                Password = userDto.Password
+                Username = userDto.Username
             });
 
+            return NoContent();
+        }
+
+        [HttpPost("{id}/change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.OldPassword) || string.IsNullOrEmpty(request.NewPassword))
+                return BadRequest("Invalid password data.");
+
+            await _service.ChangePasswordAsync(id, request.OldPassword, request.NewPassword);
             return NoContent();
         }
 

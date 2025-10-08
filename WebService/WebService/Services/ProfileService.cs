@@ -27,7 +27,8 @@ namespace WebService.Services
 
                 profile = new UserProfile
                 {
-                    Identifier = user.Username,
+                    Identifier = user.Id,
+                    Name = user.Username,
                     Role = user.Role,
                     Email = user.Email,
                 };

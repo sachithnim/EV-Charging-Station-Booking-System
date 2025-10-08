@@ -8,5 +8,6 @@ namespace WebService.Services.Interfaces
         Task<User> GetByIdAsync(string id);
         Task UpdateAsync(string id, User user);
         Task DeleteAsync(string id);
+        Task ChangePasswordAsync(string id, string oldPassword, string newPassword);
     }
 }
