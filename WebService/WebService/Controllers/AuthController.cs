@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebService.Models;
 using WebService.Services.Interfaces;
-using WebService.Models;
-using WebService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebService.Controllers
@@ -51,13 +49,13 @@ namespace WebService.Controllers
 
     public class LoginRequest
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public required string Username { get; set; }
+        public required string Password { get; set; }
     }
 
     public class EVLoginRequest
     {
-        public string NIC { get; set; }
-        public string Password { get; set; }
+        public required string NIC { get; set; }
+        public required string Password { get; set; }
     }
 }
