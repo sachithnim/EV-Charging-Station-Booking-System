@@ -30,15 +30,25 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 
 builder.Services.AddSingleton<IMongoRepository<User>, MongoRepository<User>>();
 builder.Services.AddSingleton<IMongoRepository<EVOwner>, MongoRepository<EVOwner>>();
+
+builder.Services.AddSingleton<IMongoRepository<ChargingStation>, MongoRepository<ChargingStation>>();
+// builder.Services.AddSingleton<IMongoRepository<Booking>, MongoRepository<Booking>>();
+
 //builder.Services.AddSingleton<IMongoRepository<ChargingStation>, MongoRepository<ChargingStation>>();
 builder.Services.AddSingleton<IMongoRepository<Booking>, MongoRepository<Booking>>();
+
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEVOwnerService, EVOwnerService>();
+
+builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
+//builder.Services.AddScoped<IBookingService, BookingService>();
+
 //builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
