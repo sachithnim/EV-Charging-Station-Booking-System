@@ -63,7 +63,9 @@ namespace WebService.Services
         {
             var existing = await _repo.GetByIdAsync(nic);
             if (existing == null) throw new BusinessException("EV Owner not found.");
-            owner.NIC = nic; // Prevent changing PK
+            if (owner.Email != existing.Email && await _repo.FindAsync(o => o.Email == owner.Email) is { Count: > 0 }) throw new BusinessException("Email already exists.");
+            owner.Password = BCrypt.Net.BCrypt.HashPassword(owner.Password);
+            owner.NIC = nic;
             await _repo.UpdateAsync(nic, owner);
         }
 
