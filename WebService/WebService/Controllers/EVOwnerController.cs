@@ -23,7 +23,7 @@ namespace WebService.Controllers
         public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
         [HttpGet("{nic}")]
-        [Authorize(Roles = "Backoffice")]
+        [Authorize(Roles = "Backoffice,Admin")]
         public async Task<IActionResult> GetByNIC(string nic) => Ok(await _service.GetByNICAsync(nic));
 
         [HttpPost]
