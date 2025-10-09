@@ -1,10 +1,14 @@
 import React from "react";
 import Modal from "../../components/modal/Modal";
+import { QRCodeCanvas } from "qrcode.react";
 
 const BookingViewModal = ({ isOpen, onClose, booking }) => {
   if (!booking) return null;
 
   const formatDate = (date) => new Date(date).toLocaleString();
+
+  // URL that QR code will encode
+  const qrDataUrl = `${window.location.origin}/booking/${booking.id}?token=${booking.qrToken}`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Booking Details">
@@ -62,42 +66,27 @@ const BookingViewModal = ({ isOpen, onClose, booking }) => {
               </span>
             </p>
           </div>
-          {booking.qrToken && (
-            <div>
-              <label className="text-sm font-medium text-gray-600">
-                QR Token
+
+          {/* ✅ Show QR Code if Approved */}
+          {booking.status === "Approved" && booking.qrToken && (
+            <div className="flex flex-col items-center pt-4">
+              <label className="text-sm font-medium text-gray-600 mb-2">
+                Booking QR Code
               </label>
-              <p className="text-xs text-gray-900 mt-1 font-mono break-all">
-                {booking.qrToken}
+              <QRCodeCanvas
+                value={qrDataUrl}
+                size={160}
+                bgColor="#ffffff"
+                fgColor="#000000"
+                level="M"
+                includeMargin={true}
+              />
+              <p className="text-xs text-gray-500 mt-2 break-all">
+                Token: {booking.qrToken}
               </p>
             </div>
           )}
         </div>
-
-        {booking.createdAt && (
-          <div className="pt-4 border-t border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Created At
-                </label>
-                <p className="text-sm text-gray-900 mt-1">
-                  {formatDate(booking.createdAt)}
-                </p>
-              </div>
-              {booking.updatedAt && (
-                <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    Updated At
-                  </label>
-                  <p className="text-sm text-gray-900 mt-1">
-                    {formatDate(booking.updatedAt)}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </Modal>
   );
