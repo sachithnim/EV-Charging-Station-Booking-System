@@ -20,6 +20,16 @@ const deleteEVOwner = async (nic) => {
     }
 }
 
+const getEVOwnerByNIC = async (nic) => {
+    try {
+        const response = await axiosInstance.get(`/EVOwners/${nic}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching EV Owner by NIC:", error);
+        throw error;
+    }
+}
+
 const deactivateEVOwner = async (nic) => {
     try {
         const response = await axiosInstance.post(`/EVOwners/${nic}/deactivate`);
@@ -40,4 +50,4 @@ const activateEVOwner = async (nic) => {
     }
 }
 
-export { getAllEVOwners, deleteEVOwner, deactivateEVOwner, activateEVOwner };
+export { getAllEVOwners, deleteEVOwner, deactivateEVOwner, activateEVOwner, getEVOwnerByNIC };

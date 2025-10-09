@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { activateEVOwner, deactivateEVOwner, deleteEVOwner, getAllEVOwners } from "../services/evowners/evowners";
+import {
+  activateEVOwner,
+  deactivateEVOwner,
+  deleteEVOwner,
+  getAllEVOwners,
+  getEVOwnerByNIC,
+} from "../services/evowners/evowners";
 
 export function useEVOwners() {
   const [evOwners, setEVOwners] = useState([]);
@@ -20,6 +26,20 @@ export function useEVOwners() {
     }
   };
 
+  const fetchEVOwnerByNIC = async (nic) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const evOwnerData = await getEVOwnerByNIC(nic);
+      setEVOwners([evOwnerData]);
+    } catch (error) {
+      console.error("Failed to fetch owner by NIC:", error);
+      setError("Failed to fetch owner by NIC");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeleteEVOwner = async (nic) => {
     try {
       await deleteEVOwner(nic);
@@ -29,7 +49,7 @@ export function useEVOwners() {
       console.error("Failed to delete EV Owner:", error);
       return { success: false, error: "Failed to delete EV Owner" };
     }
-  }
+  };
 
   const handleDeactivateEVOwner = async (nic) => {
     try {
@@ -40,7 +60,7 @@ export function useEVOwners() {
       console.error("Failed to deactivate EV Owner:", error);
       return { success: false, error: "Failed to deactivate EV Owner" };
     }
-  }
+  };
 
   const handleActivateEVOwner = async (nic) => {
     try {
@@ -51,7 +71,21 @@ export function useEVOwners() {
       console.error("Failed to activate EV Owner:", error);
       return { success: false, error: "Failed to activate EV Owner" };
     }
-  }
+  };
+
+  const filterEVOwner = (searchTerm, status) => {
+    return evOwners.filter((owner) => {
+      const matchesSearch =
+        owner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        owner.nic.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        owner.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        status === "All" ||
+        (status === "Active" && owner.isActive) ||
+        (status === "Inactive" && !owner.isActive);
+      return matchesSearch && matchesStatus;
+    });
+  };
 
   useEffect(() => {
     fetchEVOwners();
@@ -61,9 +95,11 @@ export function useEVOwners() {
     evOwners,
     loading,
     error,
+    fetchEVOwnerByNIC,
     fetchEVOwners,
     handleDeleteEVOwner,
     handleDeactivateEVOwner,
-    handleActivateEVOwner
-  }
+    handleActivateEVOwner,
+    filterEVOwner,
+  };
 }

@@ -1,10 +1,10 @@
-import { Mail, CreditCard as Edit, Trash2 } from "lucide-react";
+import { Mail, CreditCard as Edit, Trash2, Eye } from "lucide-react";
 import Table from "../../components/table/Table";
 import Switch from "../../components/switch/Switch";
 
 export default function EVOwnerTable({
   owners,
-  onEdit,
+  onView,
   onDelete,
   onActivate,
   onDeactivate,
@@ -63,11 +63,11 @@ export default function EVOwnerTable({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(owner);
+              onView(owner.nic);
             }}
             className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
           >
-            <Edit className="w-4 h-4" />
+            <Eye className="w-4 h-4" />
           </button>
           <button
             onClick={(e) => {
