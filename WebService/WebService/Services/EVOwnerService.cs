@@ -3,16 +3,19 @@ using WebService.Exceptions;
 using WebService.Models;
 using WebService.Repositories.Interfaces;
 using WebService.Services.Interfaces;
+using static WebService.Dtos.EVOwnerDto;
 
 namespace WebService.Services
 {
     public class EVOwnerService : IEVOwnerService
     {
         private readonly IMongoRepository<EVOwner> _repo;
+        private readonly IMongoRepository<Booking> _bookingRepo;
 
-        public EVOwnerService(IMongoRepository<EVOwner> repo)
+        public EVOwnerService(IMongoRepository<EVOwner> repo, IMongoRepository<Booking> bookingRepo)
         {
             _repo = repo;
+            _bookingRepo = bookingRepo;
         }
 
         // Get all EV Owners
@@ -33,10 +36,30 @@ namespace WebService.Services
         }
 
         // Get by NIC
+        // Get by NIC (with bookings)
         public async Task<EVOwnerDto> GetByNICAsync(string nic)
         {
             var owner = await _repo.GetByIdAsync(nic);
             if (owner == null) throw new BusinessException("EV Owner not found.");
+
+            // Fetch bookings related to this NIC
+            var bookings = await _bookingRepo.FindAsync(b => b.Nic == nic);
+
+            // Map bookings to BookingDto list
+            var bookingDtos = bookings?
+                .OrderByDescending(b => b.CreatedAt)
+                .Select(b => new BookingDto
+                {
+                    Id = b.Id!,
+                    StationId = b.StationId,
+                    SlotId = b.SlotId,
+                    StartTime = b.StartTime,
+                    EndTime = b.EndTime,
+                    Status = b.Status,
+                    QrToken = b.QrToken
+                }).ToList();
+
+            // Return owner with bookings
             return new EVOwnerDto
             {
                 NIC = owner.NIC,
@@ -44,7 +67,8 @@ namespace WebService.Services
                 Email = owner.Email,
                 Phone = owner.Phone,
                 Address = owner.Address,
-                IsActive = owner.IsActive
+                IsActive = owner.IsActive,
+                Bookings = bookingDtos
             };
         }
 
