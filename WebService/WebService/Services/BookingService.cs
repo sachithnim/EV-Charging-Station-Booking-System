@@ -2,16 +2,19 @@ using WebService.Exceptions;
 using WebService.Models;
 using WebService.Services.Interfaces;
 using WebService.Repositories.Interfaces;
+using WebService.Dtos;
 
 namespace WebService.Services
 {
     public class BookingService : IBookingService
     {
         private readonly IMongoRepository<Booking> _repo;
+        private readonly IMongoRepository<ChargingStation> _stations;
 
-        public BookingService(IMongoRepository<Booking> repo)
+        public BookingService(IMongoRepository<Booking> repo, IMongoRepository<ChargingStation> stations)
         {
             _repo = repo;
+            _stations = stations;
         }
 
         public async Task<List<Booking>> GetAllAsync() => await _repo.GetAllAsync();
@@ -102,5 +105,76 @@ namespace WebService.Services
             booking.UpdatedAt = DateTime.UtcNow;
             await _repo.UpdateAsync(id, booking);
         }
+
+        public async Task<BookingDetailsDto> GetBookingWithStationAsync(string bookingId)
+        {
+            var booking = await _repo.GetByIdAsync(bookingId);
+            if (booking == null)
+                throw new BusinessException("Booking not found.");
+
+            var station = await _stations.GetByIdAsync(booking.StationId);
+            if (station == null)
+                throw new BusinessException("Associated station not found.");
+
+            var slot = station.Slots.FirstOrDefault(s => s.Id == booking.SlotId);
+            if (slot == null)
+                throw new BusinessException("Associated slot not found in station.");
+
+            return new BookingDetailsDto
+            {
+                Id = booking.Id!,
+                Nic = booking.Nic,
+                Name = booking.Name,
+                Status = booking.Status,
+                StartTime = booking.StartTime,
+                EndTime = booking.EndTime,
+                StationId = station.Id,
+                StationName = station.Name,
+                StationAddress = station.Address,
+                StationType = station.Type,
+                SlotId = slot.Id,
+                SlotCode = slot.Code,
+                ConnectorType = slot.ConnectorType,
+                PowerKw = (double)slot.PowerKw
+            };
+        }
+
+        public async Task<List<BookingDetailsDto>> GetAllWithStationAsync()
+        {
+            var bookings = await _repo.GetAllAsync();
+            var stations = await _stations.GetAllAsync();
+
+            var results = new List<BookingDetailsDto>();
+
+            foreach (var b in bookings)
+            {
+                var station = stations.FirstOrDefault(s => s.Id == b.StationId);
+                var slot = station?.Slots.FirstOrDefault(s => s.Id == b.SlotId);
+
+                if (station != null && slot != null)
+                {
+                    results.Add(new BookingDetailsDto
+                    {
+                        Id = b.Id!,
+                        Nic = b.Nic,
+                        Name = b.Name,
+                        Status = b.Status,
+                        StartTime = b.StartTime,
+                        EndTime = b.EndTime,
+                        StationId = station.Id,
+                        StationName = station.Name,
+                        StationAddress = station.Address,
+                        StationType = station.Type,
+                        SlotId = slot.Id,
+                        SlotCode = slot.Code,
+                        ConnectorType = slot.ConnectorType,
+                        PowerKw = (double)slot.PowerKw
+                    });
+                }
+            }
+
+            return results;
+        }
+
     }
 }

@@ -1,3 +1,4 @@
+using WebService.Dtos;
 using WebService.Models;
 
 namespace WebService.Services.Interfaces
@@ -13,5 +14,9 @@ namespace WebService.Services.Interfaces
         Task ApproveAsync(string id);
         Task CompleteAsync(string id);
         Task<List<Booking>> GetByNicAsync(string nic);
+
+        Task<BookingDetailsDto> GetBookingWithStationAsync(string bookingId);
+
+        Task<List<BookingDetailsDto>> GetAllWithStationAsync();
     }
 }

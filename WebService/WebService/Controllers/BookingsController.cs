@@ -67,5 +67,19 @@ namespace WebService.Controllers
             await _service.CompleteAsync(id);
             return NoContent();
         }
+
+        [HttpGet("{id}/details")]
+        public async Task<IActionResult> GetBookingWithStation(string id)
+        {
+            var result = await _service.GetBookingWithStationAsync(id);
+            return Ok(result);
+        }
+
+        [HttpGet("details")]
+        public async Task<IActionResult> GetAllBookingsWithStations()
+        {
+            var list = await _service.GetAllWithStationAsync();
+            return Ok(list);
+        }
     }
 }

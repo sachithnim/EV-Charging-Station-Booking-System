@@ -12,8 +12,8 @@ namespace WebService.Models
         public required string Nic { get; set; }
 
         public required string Name { get; set; }
-        public string StationId { get; set; } = "ST001";
-        public string SlotId { get; set; } = "S1";
+        public required string StationId { get; set; }
+        public required string SlotId { get; set; }
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
