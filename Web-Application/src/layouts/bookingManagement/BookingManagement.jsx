@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useBookings } from "../../hooks/useBookings";
 import Table from "../../components/table/Table";
-import { Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye } from "lucide-react";
 import BookingFilters from "./BookingFilters";
 import BookingViewModal from "./BookingViewModal";
 
@@ -13,6 +13,7 @@ const BookingManagement = () => {
     approveBookingById,
     cancelBookingById,
     completeBookingById,
+    fetchBookingsWithDetails,
   } = useBookings();
 
   const [updatingId, setUpdatingId] = useState(null);
@@ -34,13 +35,15 @@ const BookingManagement = () => {
       if (newStatus === "Approved") await approveBookingById(id);
       else if (newStatus === "Cancelled") await cancelBookingById(id);
       else if (newStatus === "Completed") await completeBookingById(id);
+
+      await fetchBookingsWithDetails();
     } finally {
       setUpdatingId(null);
     }
   };
 
   const uniqueStations = useMemo(() => {
-    return [...new Set(bookings.map((b) => b.stationId))].sort();
+    return [...new Set(bookings.map((b) => b.stationName))].sort();
   }, [bookings]);
 
   const filteredBookings = useMemo(() => {
@@ -52,7 +55,7 @@ const BookingManagement = () => {
       const matchesStatus =
         statusFilter === "All" || booking.status === statusFilter;
       const matchesStation =
-        stationFilter === "All" || booking.stationId === stationFilter;
+        stationFilter === "All" || booking.stationName === stationFilter;
       const matchesDate =
         dateFilter === "" ||
         formatDateOnly(booking.startTime) === formatDateOnly(dateFilter);
@@ -81,8 +84,8 @@ const BookingManagement = () => {
     { header: "#", key: "index" },
     { header: "Name", key: "name" },
     { header: "NIC", key: "nic" },
-    { header: "Station", key: "stationId" },
-    { header: "Slot", key: "slotId" },
+    { header: "Station Name", key: "stationName" },
+    { header: "Slot Name", key: "slotCode" },
     {
       header: "Start Time",
       key: "startTime",
@@ -190,7 +193,7 @@ const BookingManagement = () => {
       <BookingViewModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
-        booking={selectedBooking}
+        bookingId={selectedBooking?.id}
       />
     </div>
   );
