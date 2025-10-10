@@ -313,7 +313,7 @@ export default function SlotManager() {
               Slot Code
             </label>
             <Input
-              placeholder="e.g., A1, B2, C3"
+              placeholder="Enter slot code"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
             />
@@ -324,7 +324,7 @@ export default function SlotManager() {
               Connector Type
             </label>
             <Input
-              placeholder="CCS / Type2 / CHAdeMO"
+              placeholder="Enter connector type (e.g., Type2, CCS)"
               value={formData.connectorType}
               onChange={(e) => setFormData({ ...formData, connectorType: e.target.value })}
             />
@@ -336,7 +336,7 @@ export default function SlotManager() {
             </label>
             <Input
               type="number"
-              placeholder="e.g., 50, 150"
+              placeholder="Enter power in kW"
               value={formData.powerKw}
               onChange={(e) => setFormData({ ...formData, powerKw: e.target.value })}
             />
