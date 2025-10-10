@@ -9,6 +9,8 @@ namespace WebService.Dtos
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
+        public string? QrToken { get; set; }
+
 
         public string StationId { get; set; } = default!;
         public string StationName { get; set; } = default!;
