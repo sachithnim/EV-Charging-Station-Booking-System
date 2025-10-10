@@ -18,7 +18,7 @@ namespace WebService.Controllers
 
         // ===== Stations =====
         [HttpGet]
-        [Authorize(Roles = "Backoffice,Admin,StationOperator")]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] string? type, [FromQuery] bool? isActive)
             => Ok(await _service.GetAllAsync(type, isActive));
 
