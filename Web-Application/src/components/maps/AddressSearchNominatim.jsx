@@ -104,7 +104,9 @@ export default function AddressSearchNominatim({ value, onSelect, onChangeText }
 
   return (
     <div className="flex flex-col gap-2 relative">
-      <label className="text-sm font-semibold text-gray-700">Address</label>
+      <label className="text-sm font-semibold text-gray-700">
+        Address <span className="text-red-500">*</span>
+      </label>
 
       <div className="flex gap-2">
         <input
