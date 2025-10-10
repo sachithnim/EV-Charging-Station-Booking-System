@@ -83,3 +83,25 @@ export const completeBooking = async (id) => {
     throw error;
   }
 };
+
+// Get a single booking with station + slot details
+export const getBookingWithStation = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/bookings/${id}/details`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching booking details with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Get all bookings with station + slot details
+export const getAllBookingsWithStations = async () => {
+  try {
+    const response = await axiosInstance.get(`/bookings/details`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all bookings with station details:", error);
+    throw error;
+  }
+};

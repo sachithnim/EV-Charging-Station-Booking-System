@@ -8,6 +8,8 @@ import {
   cancelBooking,
   approveBooking,
   completeBooking,
+  getBookingWithStation,
+  getAllBookingsWithStations,
 } from "../services/bookings/bookings";
 
 export const useBookings = () => {
@@ -15,6 +17,33 @@ export const useBookings = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Fetch all bookings WITH station and slot details
+  const fetchBookingsWithDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllBookingsWithStations();
+      setBookings(data);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchBookingWithDetailsById = async (id) => {
+    try {
+      setLoading(true);
+      const data = await getBookingWithStation(id);
+      setSelectedBooking(data);
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch booking");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch all bookings (for Backoffice or Station Operator)
   const fetchBookings = async () => {
@@ -50,8 +79,10 @@ export const useBookings = () => {
       setLoading(true);
       const data = await getBookingById(id);
       setSelectedBooking(data);
+      return data;
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch booking");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -62,7 +93,7 @@ export const useBookings = () => {
     try {
       setLoading(true);
       await createBooking(bookingData);
-      await fetchBookings();
+      await fetchBookingsWithDetails();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create booking");
     } finally {
@@ -75,7 +106,7 @@ export const useBookings = () => {
     try {
       setLoading(true);
       await updateBooking(id, bookingData);
-      await fetchBookings();
+      await fetchBookingsWithDetails();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update booking");
     } finally {
@@ -88,7 +119,7 @@ export const useBookings = () => {
     try {
       setLoading(true);
       await cancelBooking(id);
-      await fetchBookings();
+      await fetchBookingsWithDetails();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to cancel booking");
     } finally {
@@ -101,7 +132,7 @@ export const useBookings = () => {
     try {
       setLoading(true);
       await approveBooking(id);
-      await fetchBookings();
+      await fetchBookingsWithDetails();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to approve booking");
     } finally {
@@ -114,7 +145,7 @@ export const useBookings = () => {
     try {
       setLoading(true);
       await completeBooking(id);
-      await fetchBookings();
+      await fetchBookingsWithDetails();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to complete booking");
     } finally {
@@ -122,9 +153,8 @@ export const useBookings = () => {
     }
   };
 
-  // Auto-fetch on mount (optional)
   useEffect(() => {
-    fetchBookings();
+    fetchBookingsWithDetails();
   }, []);
 
   return {
@@ -132,6 +162,8 @@ export const useBookings = () => {
     selectedBooking,
     loading,
     error,
+    fetchBookingsWithDetails,
+    fetchBookingWithDetailsById,
     fetchBookings,
     fetchBookingById,
     fetchBookingsByNic,
