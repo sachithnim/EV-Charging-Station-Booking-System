@@ -30,24 +30,23 @@ export default function StationForm() {
   const isEditMode = Boolean(id);
 
   useEffect(() => {
-    if (isEditMode) {
-      (async () => {
-        try {
-          const data = await getStationById(id);
-          setFormData({
-            name: data.name || "",
-            address: data.address || "",
-            latitude: data.latitude || "",
-            longitude: data.longitude || "",
-            type: data.type || "AC",
-            schedules: data.schedules || [],
-          });
-        } catch (err) {
-          console.error("Failed to load station:", err);
-          alert("Error loading station details.");
-        }
-      })();
-    }
+    if (!isEditMode) return;
+    (async () => {
+      try {
+        const data = await getStationById(id);
+        setFormData({
+          name: data?.name ?? "",
+          address: data?.address ?? "",
+          latitude: data?.latitude ?? "",
+          longitude: data?.longitude ?? "",
+          type: data?.type ?? "AC",
+          schedules: data?.schedules ?? [],
+        });
+      } catch (err) {
+        console.error("Failed to load station:", err);
+        alert("Error loading station details.");
+      }
+    })();
   }, [id, isEditMode]);
 
   const handleChange = (e) => {
@@ -55,14 +54,39 @@ export default function StationForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Safe numeric values for the map (avoid NaN)
+  const latNum = Number.isFinite(parseFloat(formData.latitude))
+    ? parseFloat(formData.latitude)
+    : 6.927079; // Colombo default
+  const lngNum = Number.isFinite(parseFloat(formData.longitude))
+    ? parseFloat(formData.longitude)
+    : 79.861244;
+
   const handleSave = async () => {
     try {
       setLoading(true);
+      const lat = parseFloat(formData.latitude);
+      const lng = parseFloat(formData.longitude);
+
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        alert("Please select a valid location (latitude/longitude).");
+        return;
+      }
+      if (!formData.name.trim()) {
+        alert("Please enter a station name.");
+        return;
+      }
+      if (!formData.address.trim()) {
+        alert("Please enter an address.");
+        return;
+      }
+
       const payload = {
         ...formData,
-        latitude: parseFloat(formData.latitude),
-        longitude: parseFloat(formData.longitude),
+        latitude: lat,
+        longitude: lng,
       };
+
       if (isEditMode) {
         await updateStation(id, payload);
         alert("Station updated successfully.");
@@ -93,17 +117,22 @@ export default function StationForm() {
           onChange={handleChange}
           required
         />
+        
         <AddressSearchNominatim
           value={formData.address}
+          onChangeText={(text) =>
+            setFormData((prev) => ({ ...prev, address: text }))
+          }
           onSelect={({ address, lat, lng }) => {
             setFormData((prev) => ({
               ...prev,
-              address,
+              // address: prev.address, // already same as typed
               latitude: String(lat.toFixed(6)),
               longitude: String(lng.toFixed(6)),
             }));
           }}
         />
+
         <Input
           label="Latitude"
           name="latitude"
@@ -118,6 +147,7 @@ export default function StationForm() {
           onChange={handleChange}
           required
         />
+
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-2 block">
             Type
@@ -139,8 +169,8 @@ export default function StationForm() {
           Pick on Map
         </label>
         <MapPickerLeaflet
-          lat={parseFloat(formData.latitude)}
-          lng={parseFloat(formData.longitude)}
+          lat={latNum}
+          lng={lngNum}
           onChange={({ lat, lng }) => {
             setFormData((prev) => ({
               ...prev,
@@ -163,13 +193,11 @@ export default function StationForm() {
                 className="flex justify-between border-b py-2 last:border-none text-sm"
               >
                 <span>
-                  <b>
-                    {
-                      ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
-                        s.dayOfWeek
-                      ]
-                    }
-                  </b>{" "}
+                  {
+                    ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
+                      s.dayOfWeek
+                    ]
+                  }{" "}
                   | {s.startTime} - {s.endTime}
                 </span>
                 <span className="text-gray-600">{s.slotCount} slots</span>
