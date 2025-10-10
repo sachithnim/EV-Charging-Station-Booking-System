@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../button/Button";
 
 export default function AddressSearchNominatim({ value, onSelect }) {
@@ -6,7 +6,11 @@ export default function AddressSearchNominatim({ value, onSelect }) {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    setQuery(value || "");
+  }, [value]);  
+
+  const handleSearch = async () => { 
     if (!query.trim()) return;
     setLoading(true);
     setSuggestions([]);
