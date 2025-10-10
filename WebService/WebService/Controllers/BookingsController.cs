@@ -69,7 +69,7 @@ namespace WebService.Controllers
         }
 
         [HttpGet("{id}/details")]
-        [Authorize(Roles = "StationOperator")]
+        [Authorize]
         public async Task<IActionResult> GetBookingWithStation(string id)
         {
             var result = await _service.GetBookingWithStationAsync(id);
@@ -77,7 +77,7 @@ namespace WebService.Controllers
         }
 
         [HttpGet("details")]
-        [Authorize(Roles = "StationOperator")]
+        [Authorize]
         public async Task<IActionResult> GetAllBookingsWithStations()
         {
             var list = await _service.GetAllWithStationAsync();
